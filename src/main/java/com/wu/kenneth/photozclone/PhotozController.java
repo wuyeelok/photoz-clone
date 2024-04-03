@@ -60,7 +60,14 @@ public class PhotozController {
     }
 
     private String getNewId() {
-        return UUID.randomUUID().toString();
+        String newId;
+
+        do {
+            newId = UUID.randomUUID().toString();
+        } while (this.db.containsKey(newId));
+
+        return newId;
+
 //        int currentMaxID = db.values().stream()
 //                .map(Photo::getId)
 //                .mapToInt(Integer::valueOf)
