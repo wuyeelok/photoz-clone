@@ -51,7 +51,7 @@ public class PhotozController {
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());
         if (existingFiles.contains(photo.getFileName())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again or update existing photo");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again!");
         }
 
         String newId = this.getNewId();

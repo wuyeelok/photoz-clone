@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 public class Photo {
     private String id;
 
-    @NotEmpty
+    @NotEmpty(message = "fileName can't be empty or null!")
     private String fileName;
 
     // Raw data
