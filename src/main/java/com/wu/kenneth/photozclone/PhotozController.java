@@ -7,6 +7,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class PhotozController {
@@ -47,6 +49,13 @@ public class PhotozController {
 
     @PostMapping("/photoz/{fileName}")
     public Photo newPhoto(@PathVariable(value = "fileName") String fName) {
+        Set<String> existingFiles = db.values().stream()
+                .map(Photo::getFileName)
+                .collect(Collectors.toSet());
+        if (existingFiles.contains(fName)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again or update existing photo");
+        }
+
         String newId = this.getNewId();
         Photo photo = new Photo(newId, fName);
         db.put(newId, photo);
