@@ -1,5 +1,6 @@
 package com.wu.kenneth.photozclone;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -45,7 +46,7 @@ public class PhotozController {
     }
 
     @PostMapping("/photoz")
-    public Photo create(@RequestBody Photo photo) {
+    public Photo create(@RequestBody @Valid Photo photo) {
         Set<String> existingFiles = db.values().stream()
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());

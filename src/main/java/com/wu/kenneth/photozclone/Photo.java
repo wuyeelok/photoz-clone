@@ -1,8 +1,11 @@
 package com.wu.kenneth.photozclone;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class Photo {
     private String id;
 
+    @NotEmpty
     private String fileName;
 
     // Raw data
