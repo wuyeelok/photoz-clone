@@ -60,6 +60,22 @@ public class PhotozController {
         return photo;
     }
 
+    @PutMapping("/photoz")
+    public Photo replace(@RequestBody @Valid Photo photo) {
+        Set<String> existingFiles = db.values().stream()
+                .map(Photo::getFileName)
+                .collect(Collectors.toSet());
+        if (!existingFiles.contains(photo.getFileName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo you wanted to update does not exist in record!");
+        }
+
+
+        return db.values().stream()
+                .filter(p -> p.getFileName().equals(photo.getFileName()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+    }
+
     private String getNewId() {
         String newId;
 
