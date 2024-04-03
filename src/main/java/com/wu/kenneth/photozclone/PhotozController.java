@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,26 +44,27 @@ public class PhotozController {
         }
     }
 
-    @PostMapping("/photoz/{fileName}")
-    public Photo newPhoto(@PathVariable(value = "fileName") String fName) {
+    @PostMapping("/photoz")
+    public Photo create(@RequestBody Photo photo) {
         Set<String> existingFiles = db.values().stream()
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());
-        if (existingFiles.contains(fName)) {
+        if (existingFiles.contains(photo.getFileName())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again or update existing photo");
         }
 
         String newId = this.getNewId();
-        Photo photo = new Photo(newId, fName);
+        photo.setId(newId);
         db.put(newId, photo);
         return photo;
     }
 
     private String getNewId() {
-        int currentMaxID = db.values().stream()
-                .map(Photo::getId)
-                .mapToInt(Integer::valueOf)
-                .max().orElse(0);
-        return String.valueOf(currentMaxID + 1);
+        return UUID.randomUUID().toString();
+//        int currentMaxID = db.values().stream()
+//                .map(Photo::getId)
+//                .mapToInt(Integer::valueOf)
+//                .max().orElse(0);
+//        return String.valueOf(currentMaxID + 1);
     }
 }
