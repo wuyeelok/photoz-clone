@@ -1,5 +1,7 @@
-package com.wu.kenneth.photozclone;
+package com.wu.kenneth.photozclone.web;
 
+import com.wu.kenneth.photozclone.model.Photo;
+import com.wu.kenneth.photozclone.service.PhotozService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

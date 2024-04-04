@@ -1,5 +1,6 @@
-package com.wu.kenneth.photozclone;
+package com.wu.kenneth.photozclone.service;
 
+import com.wu.kenneth.photozclone.model.Photo;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

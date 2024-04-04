@@ -1,4 +1,4 @@
-package com.wu.kenneth.photozclone;
+package com.wu.kenneth.photozclone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
