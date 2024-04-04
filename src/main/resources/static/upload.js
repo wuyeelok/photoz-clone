@@ -34,7 +34,7 @@ async function uploadFile() {
 
     const data = await response.json();
 
-    alert(data);
+    alert(`Uploaded File: ${data.fileName}`);
   } catch (err) {
     alert(err.message);
   } finally {
