@@ -24,15 +24,19 @@ async function uploadFile() {
     });
 
     if (!response.ok) {
+      if (response.status === 409) {
+        const info = await response.json();
+        throw new Error(info.message);
+      }
+
       throw new Error("Something is wrong!");
     }
 
     const data = await response.json();
-    console.log(data);
+
     alert(data);
   } catch (err) {
-    console.log(err);
-    alert(err);
+    alert(err.message);
   } finally {
     fileUploadInputEl.value = "";
     uploadBtnEl.innerText = "Upload";
