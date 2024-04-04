@@ -22,10 +22,11 @@ public class PhotozService {
         return db.remove(id);
     }
 
-    public Photo save(String fileName, byte[] data) {
+    public Photo save(String fileName, String contentType, byte[] data) {
         Photo photo = new Photo();
         photo.setId(this.getNewId());
         photo.setFileName(fileName);
+        photo.setContentType(contentType);
         photo.setData(data);
 
         db.put(photo.getId(), photo);

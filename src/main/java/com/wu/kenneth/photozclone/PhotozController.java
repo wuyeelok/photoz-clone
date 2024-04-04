@@ -62,7 +62,7 @@ public class PhotozController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again!");
         }
 
-        return photozService.save(file.getOriginalFilename(), file.getBytes());
+        return photozService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
     }
 
     @PutMapping("/photoz")
