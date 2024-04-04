@@ -1,5 +1,7 @@
-package com.wu.kenneth.photozclone;
+package com.wu.kenneth.photozclone.web;
 
+import com.wu.kenneth.photozclone.model.Photo;
+import com.wu.kenneth.photozclone.service.PhotozService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
