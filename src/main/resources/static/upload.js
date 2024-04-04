@@ -1,6 +1,40 @@
 const uploadBtnEl = document.getElementById("uploadBtn");
 const fileUploadInputEl = document.getElementById("fileUpload");
 
+/**
+ * Check if file is valid
+ * @param {File} file file
+ * @return {String} Message after checking, return "valid" if valid
+ */
+function isValidFile(file) {
+  let msg = "valid";
+
+  const allowedFileType = new Set();
+  allowedFileType.add("image/png");
+  allowedFileType.add("image/jpeg");
+  allowedFileType.add("image/svg+xml");
+  allowedFileType.add("image/gif");
+  allowedFileType.add("image/webp");
+  allowedFileType.add("image/tiff");
+
+  const maxFileSize = 1024 * 1024 * 200; // 200 MB
+
+  // const dbColLength = 50; // DB column max length
+
+  if (file === undefined || "" === file.name || 0 === file.size) {
+    msg = "Uploaded File is empty!!";
+  } else if (!allowedFileType.has(file.type)) {
+    msg = "Invalid file format, image only!!";
+  } else if (file.size > maxFileSize) {
+    msg = `File's size exceeds limit of ${maxFileSize / 1024 / 1024}MB!!`;
+  }
+  // else if (file.name.length > dbColLength) {
+  //   msg = `File's name exceeds limit of ${dbColLength} characters!!`;
+  // }
+
+  return msg;
+}
+
 async function uploadFile() {
   const formData = new FormData();
   const uploadFileList = fileUploadInputEl.files;
@@ -10,7 +44,12 @@ async function uploadFile() {
     return;
   }
   const file = uploadFileList[0];
-  console.log(`Uploaded file name: ${file.name}`);
+  const checkMsg = isValidFile(file);
+  if ("valid" !== checkMsg) {
+    alert(checkMsg);
+    return;
+  }
+
   formData.append("data", file);
 
   try {
@@ -24,7 +63,7 @@ async function uploadFile() {
     });
 
     if (!response.ok) {
-      if (response.status === 409) {
+      if (response.status === 400 || response.status === 409) {
         const info = await response.json();
         throw new Error(info.message);
       }
