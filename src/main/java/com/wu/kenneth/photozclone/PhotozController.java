@@ -3,8 +3,10 @@ package com.wu.kenneth.photozclone;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,17 +48,21 @@ public class PhotozController {
     }
 
     @PostMapping("/photoz")
-    public Photo create(@RequestBody @Valid Photo photo) {
+    public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
         Set<String> existingFiles = db.values().stream()
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());
+        Photo photo = new Photo();
+        photo.setId(this.getNewId());
+        photo.setFileName(file.getOriginalFilename());
+        photo.setData(file.getBytes());
+
         if (existingFiles.contains(photo.getFileName())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again!");
         }
 
-        String newId = this.getNewId();
-        photo.setId(newId);
-        db.put(newId, photo);
+
+        db.put(photo.getId(), photo);
         return photo;
     }
 

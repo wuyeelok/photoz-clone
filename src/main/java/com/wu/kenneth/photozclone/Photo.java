@@ -1,5 +1,6 @@
 package com.wu.kenneth.photozclone;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 
 public class Photo {
@@ -9,7 +10,8 @@ public class Photo {
     private String fileName;
 
     // Raw data
-
+    @JsonIgnore
+    private byte[] data;
 
     public Photo() {
     }
@@ -33,5 +35,13 @@ public class Photo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 }
