@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 public class PhotozController {
@@ -60,6 +61,13 @@ public class PhotozController {
 
         if (existingFiles.contains(file.getOriginalFilename())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Photo already exist! Delete photo and try again!");
+        }
+
+        final Set<String> ALLOWED_FILE_TYPE = Stream
+                .of("image/png", "image/jpeg", "image/svg+xml", "image/gif", "image/webp", "image/tiff")
+                .collect(Collectors.toCollection(HashSet::new));
+        if (!ALLOWED_FILE_TYPE.contains(file.getContentType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid photo type or this file is not a photo!");
         }
 
         return photozService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
