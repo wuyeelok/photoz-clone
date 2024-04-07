@@ -1,58 +1,44 @@
 package com.wu.kenneth.photozclone.service;
 
 import com.wu.kenneth.photozclone.model.Photo;
+import com.wu.kenneth.photozclone.repository.PhotozRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PhotozService {
-    private Map<String, Photo> db = new HashMap<>() {{
-        put("1", new Photo("1", "hello.jpg"));
-    }};
+    private final PhotozRepository photozRepository;
 
-    public Collection<Photo> get() {
-        return db.values();
+    public PhotozService(PhotozRepository photozRepository) {
+        this.photozRepository = photozRepository;
     }
 
-    public Photo get(String id) {
-        return db.get(id);
+    public Iterable<Photo> get() {
+        return photozRepository.findAll();
     }
 
-    public Photo remove(String id) {
-        return db.remove(id);
+    public Photo get(Integer id) {
+        return photozRepository.findById(id).orElse(null);
+    }
+
+    public void remove(Integer id) {
+        photozRepository.deleteById(id);
     }
 
     public Photo save(String fileName, String contentType, byte[] data) {
         Photo photo = new Photo();
-        photo.setId(this.getNewId());
+        // photo.setId(this.getNewId());
         photo.setFileName(fileName);
         photo.setContentType(contentType);
         photo.setData(data);
 
-        db.put(photo.getId(), photo);
+        photozRepository.save(photo);
         return photo;
     }
 
-    private Set<String> getIds() {
-        return db.keySet();
-    }
-
-    private String getNewId() {
-        String newId;
-
-        do {
-            newId = UUID.randomUUID().toString();
-        } while (this.getIds().contains(newId));
-
-        return newId;
-
-//        int currentMaxID = db.values().stream()
-//                .map(Photo::getId)
-//                .mapToInt(Integer::valueOf)
-//                .max().orElse(0);
-//        return String.valueOf(currentMaxID + 1);
-    }
 }
 
 
