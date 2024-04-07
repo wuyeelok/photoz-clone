@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 @RestController
 public class PhotozController {
@@ -30,12 +30,12 @@ public class PhotozController {
     }
 
     @GetMapping("/photoz")
-    public Collection<Photo> get() {
+    public Iterable<Photo> get() {
         return photozService.get();
     }
 
     @GetMapping("/photoz/{id}")
-    public Photo get(@PathVariable String id) {
+    public Photo get(@PathVariable Integer id) {
 
         Photo photo = photozService.get(id);
         if (photo == null) {
@@ -46,17 +46,13 @@ public class PhotozController {
     }
 
     @DeleteMapping("/photoz/{id}")
-    public void delete(@PathVariable String id) {
-
-        Photo photo = photozService.remove(id);
-        if (photo == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public void delete(@PathVariable Integer id) {
+        photozService.remove(id);
     }
 
     @PostMapping("/photoz")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
-        Set<String> existingFiles = photozService.get().stream()
+        Set<String> existingFiles = StreamSupport.stream(photozService.get().spliterator(), false)
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());
 
@@ -77,7 +73,7 @@ public class PhotozController {
 
     @PutMapping("/photoz")
     public Photo replace(@RequestBody @Valid Photo photo) {
-        Set<String> existingFiles = photozService.get().stream()
+        Set<String> existingFiles = StreamSupport.stream(photozService.get().spliterator(), false)
                 .map(Photo::getFileName)
                 .collect(Collectors.toSet());
         if (!existingFiles.contains(photo.getFileName())) {
@@ -85,7 +81,7 @@ public class PhotozController {
         }
 
 
-        return photozService.get().stream()
+        return StreamSupport.stream(photozService.get().spliterator(), false)
                 .filter(p -> p.getFileName().equals(photo.getFileName()))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
